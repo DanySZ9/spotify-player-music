@@ -6,9 +6,9 @@ const axios = require("axios");
 let window;
 
 // Add your Spotify app credentials here, if you don't know how to get them, check the README.md
-const CLIENT_ID = "5ddd565728dd4740b9cf02e52680ce70";
-const CLIENT_SECRET = "ace9f4e26a2b4b048cc9c52c89166850";
-// Redirect URI must be the same as the one set in your Spotify app settings
+const CLIENT_ID = "YOUR CLIENT ID HERE";
+const CLIENT_SECRET = "YOUR CLIENT SECRET HERE";
+// Redirect URI must be the same as the one set in your Spotify app settings. For development, you can use http://127.0.0.1:3000/callback
 const REDIRECT_URI = "http://127.0.0.1:3000/callback";
 
 // Function to create the main application window
@@ -39,7 +39,7 @@ function startAuthServer() {
     });
     authApp.get("/callback", async (req, res) => {
       const code = req.query.code;
-      res.send("Login completado. Puedes cerrar esta ventana.");
+      res.send("Login complete, you can close this window.");
       const tokens = await getAccessToken(code);
       window.webContents.send("spotify-token", tokens);
       server.close();
