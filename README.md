@@ -1,11 +1,19 @@
-Player Music with API Spotify
+# Player Music with API Spotify
 
--------------------------------------
-EXPLICACION EN ESPAÑOL
--------------------------------------
+A small widget created with Electron that lets you see in real time the song that is playing in your Spotify app.
 
-## ACERCA DEL PROYECTO ##
-Pequeña aplicacion de escritorio hecha con Electron que muestra el estado de reproduccion de Spotify en tiempo real.
+
+## PREVIEW
+
+<img width="626" height="324" alt="image" src="https://github.com/user-attachments/assets/d1be370c-46f1-4825-adbe-b0220b309221" />
+<img width="627" height="332" alt="image" src="https://github.com/user-attachments/assets/ae8d5aa1-edfb-424e-9e4d-a6beab1d1b47" />
+
+
+
+
+
+
+
 
 En la aplicacion el usuario puede:
 - Reproducir y pausar la cancion.
@@ -13,11 +21,6 @@ En la aplicacion el usuario puede:
 - Adelantar a la siguiente cancion.
 - Retroceder a la cancion anterior.
 
-## VISTA PREVIA ##
-<img width="627" height="332" alt="image" src="https://github.com/user-attachments/assets/ae8d5aa1-edfb-424e-9e4d-a6beab1d1b47" />
-<img width="622" height="328" alt="image" src="https://github.com/user-attachments/assets/9eeb311f-2125-4225-8040-32422f3114a7" />
-<img width="620" height="328" alt="image" src="https://github.com/user-attachments/assets/1343fcf3-c7a3-48a5-a4fe-62bbfc2eeeae" />
-<img width="614" height="316" alt="image" src="https://github.com/user-attachments/assets/ee1fd8fe-83c1-4ea0-8284-0ba58cc94ec7" />
 
 ## CARACTERISTICAS ##
 - Login con Spotify OAuth.
