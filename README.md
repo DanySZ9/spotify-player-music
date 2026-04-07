@@ -2,9 +2,6 @@
 
 A small widget created with Electron that lets you see in real time the song that is playing in your Spotify app.
 
-With this player music you can:
-- P
-
 ## PREVIEW
 
 <img width="626" height="324" alt="image" src="https://github.com/user-attachments/assets/d1be370c-46f1-4825-adbe-b0220b309221" />
