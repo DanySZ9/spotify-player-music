@@ -6,8 +6,8 @@ const axios = require("axios");
 let window;
 
 // Add your Spotify app credentials here, if you don't know how to get them, check the README.md
-const CLIENT_ID = "YOUR CLIENT ID HERE";
-const CLIENT_SECRET = "YOUR CLIENT SECRET HERE";
+const CLIENT_ID = "YOUR CLIENT ID";
+const CLIENT_SECRET = "YOUR CLIENT SECRET ID";
 // Redirect URI must be the same as the one set in your Spotify app settings. For development, you can use http://127.0.0.1:3000/callback
 const REDIRECT_URI = "http://127.0.0.1:3000/callback";
 
