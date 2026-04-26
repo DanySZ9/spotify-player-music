@@ -194,13 +194,101 @@ svg:hover{
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.1s ease;
 }
 
 .buttonPlay svg {
     color: black;
-    width: 50px;
-    height: 50px;
+    width: 28px;
+    height: 28px;
     stroke: black;
     fill: none;
     stroke-width: 2;
+    display: block;
+}
+
+
+/* ───────────────────────────────────────────────────────
+   AGREGAR ESTO AL FINAL DE TU styles.css EXISTENTE
+   ─────────────────────────────────────────────────────── */
+
+/* ── SCREENS ── */
+.screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ── LOGIN CARD ── */
+.login-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: white;
+    border-radius: 20px;
+    padding: 35px 40px;
+    width: 85%;
+    height: 75%;
+    text-align: center;
+    -webkit-app-region: no-drag;
+}
+
+.spotify-logo {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 4px;
+}
+
+.login-card h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+}
+
+.login-card p {
+    font-size: 12px;
+    color: #555;
+    margin: 0;
+    max-width: 220px;
+    line-height: 1.5;
+}
+
+.login-card button {
+    margin-top: 8px;
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: "Inter Tight", sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s ease, transform 0.1s ease;
+    -webkit-app-region: no-drag;
+}
+
+.login-card button:hover {
+    background-color: #17a349;
+    transform: scale(1.03);
+}
+
+.login-card button:active {
+    transform: scale(0.97);
+}
+
+.login-card button i {
+    font-size: 16px;
 }

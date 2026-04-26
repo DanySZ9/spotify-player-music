@@ -1,5 +1,29 @@
-const { ipcRenderer } = require("electron");
-const lottie = require("lottie-web");
+// ─────────────────────────────────────────────
+//  SCREENS — Login / Player
+// ─────────────────────────────────────────────
+
+const loginScreen = document.getElementById("login-screen");
+const playerScreen = document.getElementById("player-screen");
+
+function showPlayer() {
+  loginScreen.classList.add("hidden");
+  playerScreen.classList.remove("hidden");
+  // Inicializar Lottie aquí, cuando el contenedor ya es visible
+  initLottie();
+}
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  await window.spotify.login();
+});
+
+// Cuando main.js confirma el login, cambia a la pantalla del player
+window.spotify.onToken((tokens) => {
+  accessToken = tokens.access_token;
+  refreshToken = tokens.refresh_token;
+  showPlayer();
+  getCurrentlyPlaying();
+  startPolling();
+});
 
 // ─────────────────────────────────────────────
 //  STATE
@@ -15,10 +39,7 @@ let pollingInterval = null;
 let isDragging = false;
 let fastPollTimeout = null;
 
-// Lottie: lottieIsAtPlay = true means icon is currently showing "play" (triangle)
-// ⚠️ If the icon appears inverted, flip this initial value: false → true or true → false
-let animationPlayPause = null;
-let lottieIsAtPlay = false;
+// Estado del ícono play/pause (manejado con SVG inline)
 
 // ─────────────────────────────────────────────
 //  DOM REFERENCES
@@ -41,59 +62,55 @@ const iconPlayPause = document.querySelector(".buttonPlay");
 //  LOTTIE ANIMATION
 // ─────────────────────────────────────────────
 
-setTimeout(() => {
+// El JSON se pasa como objeto (animationData) en lugar de path,
+// porque en Electron con file:// el fetch del JSON puede fallar.
+const LOTTIE_DATA = {"v":"5.6.5","fr":30,"ip":0,"op":8,"w":32,"h":32,"nm":"play-pause","ddd":0,"assets":[],"layers":[{"ddd":0,"ind":1,"ty":4,"nm":"play-pause","sr":1,"ks":{"o":{"a":0,"k":100,"ix":11},"r":{"a":0,"k":0,"ix":10},"p":{"a":0,"k":[16,16,0],"ix":2},"a":{"a":0,"k":[12,12,0],"ix":1},"s":{"a":0,"k":[100,100,100],"ix":6}},"ao":0,"shapes":[{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":1,"k":[{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"t":0,"s":[{"i":[[0,0],[0,0],[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0],[0,0],[0,0]],"v":[[-2,-8],[2,-8],[2,0],[2,8],[-2,8]],"c":true}]},{"t":8,"s":[{"i":[[0,0],[0,0],[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0],[0,0],[0,0]],"v":[[-3.062,-9],[-3,-9],[11.062,0],[-3.062,9],[-3.062,9.062]],"c":true}]}],"ix":2},"nm":"Path 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"st","c":{"a":0,"k":[0,0,0,1],"ix":3},"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":2,"ix":5},"lc":2,"lj":2,"bm":0,"nm":"Stroke 1","mn":"ADBE Vector Graphic - Stroke","hd":false},{"ty":"tr","p":{"a":0,"k":[8,12],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":0,"k":100,"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"left rectangle","np":2,"cix":2,"bm":0,"ix":1,"mn":"ADBE Vector Group","hd":false},{"ty":"gr","it":[{"ind":0,"ty":"sh","ix":1,"ks":{"a":0,"k":{"i":[[0,0],[0,0],[0,0],[0,0]],"o":[[0,0],[0,0],[0,0],[0,0]],"v":[[-2,-8],[2,-8],[2,8],[-2,8]],"c":true},"ix":2},"nm":"Path 1","mn":"ADBE Vector Shape - Group","hd":false},{"ty":"st","c":{"a":0,"k":[0,0,0,1],"ix":3},"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":2,"ix":5},"lc":2,"lj":2,"bm":0,"nm":"Stroke 1","mn":"ADBE Vector Graphic - Stroke","hd":false},{"ty":"tr","p":{"a":0,"k":[16,12],"ix":2},"a":{"a":0,"k":[0,0],"ix":1},"s":{"a":1,"k":[{"i":{"x":[0.667,0.667],"y":[1,1]},"o":{"x":[0.333,0.333],"y":[0,0]},"t":0,"s":[100,100]},{"t":8,"s":[0,0]}],"ix":3},"r":{"a":0,"k":0,"ix":6},"o":{"a":1,"k":[{"i":{"x":[0.667],"y":[1]},"o":{"x":[0.333],"y":[0]},"t":0,"s":[100]},{"t":4,"s":[0]}],"ix":7},"sk":{"a":0,"k":0,"ix":4},"sa":{"a":0,"k":0,"ix":5},"nm":"Transform"}],"nm":"right rectangle","np":2,"cix":2,"bm":0,"ix":2,"mn":"ADBE Vector Group","hd":false}],"ip":0,"op":8,"st":0,"bm":0}],"markers":[]};
+
+let animationPlayPause = null;
+let lottieIsAtPlay = false; // false = mostrando pausa (barras), true = mostrando play (triángulo)
+
+function initLottie() {
   if (!iconPlayPause) {
     console.error("Element .buttonPlay not found");
     return;
   }
-
-  try {
-    animationPlayPause = lottie.loadAnimation({
-      container: iconPlayPause,
-      renderer: "svg",
-      loop: false,
-      autoplay: false,
-      path: "./icons/playPause.json",
-    });
-    console.log("Lottie animation loaded");
-  } catch (error) {
-    console.error("Error loading Lottie animation:", error);
-  }
-}, 500);
+  animationPlayPause = lottie.loadAnimation({
+    container: iconPlayPause,
+    renderer: "svg",
+    loop: false,
+    autoplay: false,
+    animationData: LOTTIE_DATA, // objeto directo, sin fetch
+  });
+  // Ir al frame final (estado pause=barras) para empezar en pausa
+  animationPlayPause.goToAndStop(7, true);
+  lottieIsAtPlay = false;
+}
 
 /**
- * Syncs the Lottie icon to match the actual isPlaying state.
- * Only animates if the icon is visually out of sync.
+ * Sincroniza la animación Lottie con el estado real de reproducción.
+ * frame 0 = play (triángulo) | frame 7 = pause (barras)
  */
 function syncLottieIcon() {
   if (!animationPlayPause) return;
 
-  const shouldShowPause = isPlaying; // playing → show pause icon so user can pause
-
-  if (shouldShowPause && lottieIsAtPlay) {
-    // Song is playing but icon shows play → animate to pause icon
+  if (isPlaying && !lottieIsAtPlay) {
+    // Estaba en pause, animar hacia play (dirección inversa: 7→0)
     animationPlayPause.setDirection(-1);
     animationPlayPause.play();
-    lottieIsAtPlay = false;
-  } else if (!shouldShowPause && !lottieIsAtPlay) {
-    // Song is paused but icon shows pause → animate to play icon
+    lottieIsAtPlay = true;
+  } else if (!isPlaying && lottieIsAtPlay) {
+    // Estaba en play, animar hacia pause (dirección normal: 0→7)
     animationPlayPause.setDirection(1);
     animationPlayPause.play();
-    lottieIsAtPlay = true;
+    lottieIsAtPlay = false;
   }
-  // Already in sync → do nothing
 }
 
 // ─────────────────────────────────────────────
 //  TOKEN & POLLING
 // ─────────────────────────────────────────────
 
-ipcRenderer.on("spotify-token", (event, tokens) => {
-  accessToken = tokens.access_token;
-  refreshToken = tokens.refresh_token;
-  getCurrentlyPlaying();
-  startPolling();
-});
+// onToken se maneja arriba en la sección SCREENS al recibir el login
 
 /**
  * Polling strategy:
@@ -103,7 +120,7 @@ ipcRenderer.on("spotify-token", (event, tokens) => {
  */
 function startPolling(mode = "normal") {
   if (pollingInterval) clearInterval(pollingInterval);
-  const interval = mode === "fast" ? 3000 : 1000;
+  const interval = mode === "fast" ? 3000 : 10000; // FIX: "normal" era 1000ms (muy agresivo), ahora 10s
   pollingInterval = setInterval(getCurrentlyPlaying, interval);
 }
 
@@ -118,14 +135,16 @@ document.addEventListener("visibilitychange", () => {
     startPolling("fast");
 
     if (fastPollTimeout) clearTimeout(fastPollTimeout);
-    fastPollTimeout = setTimeout(() => startPolling("normal"), 1000);
+    fastPollTimeout = setTimeout(() => startPolling("normal"), 30000); // FIX: era 1000ms, debe ser 30s
   } else {
     startPolling("normal");
   }
 });
 
 async function refreshAccessToken() {
-  accessToken = await ipcRenderer.invoke("refresh-token", refreshToken);
+  // FIX: usar window.spotify.refreshToken (expuesto por preload) en lugar de ipcRenderer directo
+  const newToken = await window.spotify.refreshToken(refreshToken);
+  if (newToken) accessToken = newToken;
 }
 
 // ─────────────────────────────────────────────
@@ -322,7 +341,6 @@ document.addEventListener("mouseup", async () => {
 
 iconPlayPause.addEventListener("click", async () => {
   if (!animationPlayPause) return;
-
   const wasPlaying = isPlaying;
   const action = wasPlaying ? "pause" : "play";
 
