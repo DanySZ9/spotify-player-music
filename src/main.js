@@ -1,7 +1,10 @@
 require("dotenv").config({ quiet: true });
 
 const { app, BrowserWindow, shell, ipcMain } = require("electron");
-const path = require("path"); // FIX: era "requiere" (typo)
+const path = require("path")
+require("dotenv").config({
+  path: path.join(process.resourcesPath, ".env")
+})
 
 const { startCallbackServer } = require("./callbackServer");
 const { refreshAccessToken, getCurrentTrackRequest } = require("./spotifyApi");
@@ -21,7 +24,6 @@ function createWindow() {
     resizable: false,
     frame: false,
     alwaysOnTop: true,
-    skipTaskbar: true,
     webPreferences: {
       // FIX: eliminadas las líneas duplicadas inseguras (nodeIntegration: true / contextIsolation: false)
       // Ahora solo existen los valores correctos y seguros:
