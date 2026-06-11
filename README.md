@@ -1,11 +1,12 @@
-# Player Music with API Spotify
+# 🎵 Player Music with API Spotify
 
-A small widget created with Electron that lets you see in real time the song that is playing in your Spotify app.
+An interactive music player widget built with the Spotify Web API, allowing users to play, pause, skip tracks, return to previous songs, and seek through the current track in real time.
 
 ## PREVIEW
 
+<img width="626" height="328" alt="image" src="https://github.com/user-attachments/assets/d88d54c7-6c2b-4dc5-91e4-b22d74688c2b" />
 <img width="626" height="324" alt="image" src="https://github.com/user-attachments/assets/d1be370c-46f1-4825-adbe-b0220b309221" />
-<img width="627" height="332" alt="image" src="https://github.com/user-attachments/assets/ae8d5aa1-edfb-424e-9e4d-a6beab1d1b47" />
+<img width="626" height="332" alt="image" src="https://github.com/user-attachments/assets/ae8d5aa1-edfb-424e-9e4d-a6beab1d1b47" />
 
 ## Features
 
