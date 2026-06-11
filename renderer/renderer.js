@@ -225,8 +225,8 @@ async function getCurrentlyPlaying() {
     if (res.status === 204) {
       songElement.textContent = "There's no song playing";
       artistElement.textContent = "";
-      coverElement.src = "./default.jpg";
-      bgElement.src = "./bgDefault.jpg";
+      coverElement.src = "images/default.jpg";
+      bgElement.src = "images/bgDefault.jpg";
       return;
     }
 

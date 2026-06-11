@@ -233,18 +233,14 @@ svg:hover{
     justify-content: center;
     gap: 12px;
     background: white;
-    border-radius: 20px;
-    padding: 35px 40px;
-    width: 85%;
-    height: 75%;
+    width: 100%;
+    height: 100%;
     text-align: center;
     -webkit-app-region: no-drag;
 }
 
 .spotify-logo {
-    width: 52px;
-    height: 52px;
-    margin-bottom: 4px;
+    margin-bottom: 12px;
 }
 
 .login-card h1 {
@@ -252,6 +248,7 @@ svg:hover{
     font-weight: 700;
     color: #111;
     margin: 0;
+    user-select: none;
 }
 
 .login-card p {
@@ -260,6 +257,7 @@ svg:hover{
     margin: 0;
     max-width: 220px;
     line-height: 1.5;
+    user-select: none;
 }
 
 .login-card button {
@@ -278,6 +276,7 @@ svg:hover{
     gap: 8px;
     transition: background 0.2s ease, transform 0.1s ease;
     -webkit-app-region: no-drag;
+    user-select: none;
 }
 
 .login-card button:hover {
